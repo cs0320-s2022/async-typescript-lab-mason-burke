@@ -8,6 +8,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import spark.*;
@@ -57,7 +58,6 @@ public final class Main {
     // TODO: create a call to Spark.post to make a POST request to a URL which
     // will handle getting matchmaking results for the input
     // It should only take in the route and a new ResultsHandler
-
     Spark.post("/results", new ResultsHandler());
 
     Spark.options("/*", (request, response) -> {
@@ -118,9 +118,11 @@ public final class Main {
         return null;
       }
 
-      String sun = reqJson.getString("sun");
-      String moon = reqJson.getString("moon");
-      String rising = reqJson.getString("rising");
+      JSONObject input = reqJson.getJSONObject("matches");
+
+      String sun = input.getString("sun");
+      String moon = input.getString("moon");
+      String rising = input.getString("rising");
 
       // TODO: use the MatchMaker.makeMatches method to get matches
 

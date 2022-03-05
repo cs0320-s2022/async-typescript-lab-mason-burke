@@ -16,9 +16,9 @@ let suggestionList = document.getElementById("suggestions");
 const sun = document.getElementById("sun");
 const moon = document.getElementById("moon");
 const rising = document.getElementById("rising");
-sun.addEventListener("click", () => postAndUpdate());
-moon.addEventListener("click", () => postAndUpdate());
-rising.addEventListener("click", () => postAndUpdate());
+sun.addEventListener("change", () => postAndUpdate());
+moon.addEventListener("change", () => postAndUpdate());
+rising.addEventListener("change", () => postAndUpdate());
 function postAndUpdate() {
     // TODO: empty the suggestionList (you want new suggestions each time someone types something new)
     //  HINT: use .innerHTML
@@ -31,7 +31,6 @@ function postAndUpdate() {
         moon: document.getElementById("moon").value,
         rising: document.getElementById("rising").value
     };
-    console.log(postParameters);
     // TODO: make a POST request using fetch to the URL to handle this request you set in your Main.java
     //  HINT: check out the POST REQUESTS section of the lab and of the front-end guide.
     //  Make sure you add "Access-Control-Allow-Origin":"*" to your headers.
@@ -50,10 +49,7 @@ function postAndUpdate() {
         },
     })
         .then((response) => response.json())
-        .then((matches) => {
-        console.log(matches.matches);
-        updateSuggestions(matches.matches);
-    });
+        .then((matches) => updateSuggestions(matches.matches));
     // TODO: Call and fill in the updateSuggestions method in one of the .then statements in the Promise
     //  Parse the JSON in the response object
     //  HINT: remember to get the specific field in the JSON you want to use
@@ -64,8 +60,8 @@ function updateSuggestions(matches) {
     //  NOTE: you should use <li> (list item) tags to wrap each element. When you do so,
     //  make sure to add the attribute 'tabindex="0"' (for example: <li tabindex="0">{your element}</li>).
     //  This makes each element selectable via screen reader.
-    for (let match in matches) {
-        suggestionList.innerHTML += '<li tabindex="0">' + match + '</li>';
+    for (let i = 0; i < matches.length; i++) {
+        suggestionList.innerHTML += '<li tabindex="0">' + matches[i] + '</li>';
     }
 }
 // TODO: create an event listener to the document (document.addEventListener) that detects "keyup".
@@ -74,7 +70,6 @@ function updateSuggestions(matches) {
 //  HINT: the listener callback function should be asynchronous and wait until the values are
 //  updated before calling postAndUpdate().
 document.addEventListener("keyup", (e) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(e.key);
     if (e.key == "p") {
         yield updateValues("Libra", "Gemini", "Aquarius");
         postAndUpdate();
